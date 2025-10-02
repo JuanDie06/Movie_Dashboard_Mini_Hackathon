@@ -1,10 +1,45 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Health check endpoint
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # API routes under /api/v1 namespace
+  namespace :api do
+    namespace :v1 do
+      # Movies routes
+      resources :movies do
+        collection do
+          get :popular
+          get :recent
+          post :sync_from_tmdb
+        end
+        
+        # Nested routes for movie reviews
+        resources :reviews, only: [:index]
+      end
+
+      # Genres routes
+      resources :genres do
+        member do
+          get :movies
+        end
+      end
+
+      # Reviews routes
+      resources :reviews do
+        collection do
+          get :highest_rated
+        end
+      end
+
+      # Watchlists routes
+      resources :watchlists do
+        collection do
+          get :stats
+        end
+      end
+    end
+  end
+
+  # Root path
+  root to: proc { [200, {}, ["Movie Dashboard API - Ready"]] }
 end
