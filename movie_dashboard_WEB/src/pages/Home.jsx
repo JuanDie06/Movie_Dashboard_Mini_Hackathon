@@ -40,7 +40,7 @@ function Home() {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
-          <div className="text-red-500 text-xl mb-4">⚠️ {error}</div>
+          <div className="text-red-500 text-xl mb-4">{error}</div>
           <button 
             onClick={fetchPopularMovies}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -56,14 +56,11 @@ function Home() {
     <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 mb-8 text-white shadow-lg">
-        <h1 className="text-5xl font-bold mb-4">🎬 Discover Amazing Movies</h1>
+        <h1 className="text-5xl font-bold mb-4">Discover Amazing Movies</h1>
         <p className="text-xl opacity-90">Browse through trending and popular movies from around the world</p>
       </div>
 
-      <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
-        <span>🔥</span>
-        <span>Popular Right Now</span>
-      </h2>
+      <h2 className="text-3xl font-bold mb-6">Popular Right Now</h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {movies.map((movie) => (
@@ -81,7 +78,7 @@ function Home() {
                 />
               ) : (
                 <div className="w-full h-80 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                  <span className="text-gray-400 text-2xl">🎬</span>
+                  <span className="text-gray-400 text-sm">No Image</span>
                 </div>
               )}
               {/* Rating Badge */}
@@ -95,7 +92,7 @@ function Home() {
             <div className="p-4">
               <h3 className="font-bold text-lg mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">{movie.title}</h3>
               <div className="text-sm text-gray-600">
-                <span>📅 {movie.release_date?.split('-')[0] || 'N/A'}</span>
+                <span>{movie.release_date?.split('-')[0] || 'N/A'}</span>
               </div>
             </div>
           </Link>

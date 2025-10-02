@@ -34,7 +34,7 @@ function MovieDetail() {
         status,
         notes: `Added to ${statusName}`
       });
-      toast.success(`✅ Added to ${statusName} list!`);
+      toast.success(`Added to ${statusName} list!`);
     } catch (err) {
       if (err.response?.data?.errors) {
         toast.error(err.response.data.errors.join(', '));
@@ -54,7 +54,7 @@ function MovieDetail() {
       setShowReviewForm(false);
       setReviewForm({ rating: 5, content: '', author_name: '' });
       fetchMovieDetails(); // Refresh to show new review
-      toast.success('⭐ Review submitted successfully!');
+      toast.success('Review submitted successfully!');
     } catch (err) {
       const errorMsg = err.response?.data?.errors?.join(', ') || 'Failed to submit review';
       toast.error(errorMsg);
@@ -76,7 +76,7 @@ function MovieDetail() {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
-          <div className="text-2xl mb-4">🎬 Movie not found</div>
+          <div className="text-2xl mb-4">Movie not found</div>
           <Link to="/movies" className="text-blue-600 hover:underline">
             Browse all movies
           </Link>
@@ -110,7 +110,7 @@ function MovieDetail() {
               <h1 className="text-5xl font-bold mb-2">{movie.title}</h1>
               <div className="flex gap-4 text-lg">
                 <span>{movie.release_date?.split('-')[0]}</span>
-                <span>⭐ {parseFloat(movie.vote_average).toFixed(1)}/10</span>
+                <span>{parseFloat(movie.vote_average).toFixed(1)}/10</span>
                 {movie.runtime && <span>{movie.runtime} min</span>}
               </div>
             </div>
@@ -137,28 +137,25 @@ function MovieDetail() {
 
         {/* Watchlist Actions */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h3 className="text-lg font-semibold mb-4">📝 Add to Watchlist</h3>
+          <h3 className="text-lg font-semibold mb-4">Add to Watchlist</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
               onClick={() => handleAddToWatchlist('want_to_watch')}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-md hover:shadow-lg"
+              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-md hover:shadow-lg"
             >
-              <span>📌</span>
-              <span>Want to Watch</span>
+              Want to Watch
             </button>
             <button
               onClick={() => handleAddToWatchlist('watching')}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition shadow-md hover:shadow-lg"
+              className="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition shadow-md hover:shadow-lg"
             >
-              <span>▶️</span>
-              <span>Watching</span>
+              Watching
             </button>
             <button
               onClick={() => handleAddToWatchlist('watched')}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition shadow-md hover:shadow-lg"
+              className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition shadow-md hover:shadow-lg"
             >
-              <span>✅</span>
-              <span>Watched</span>
+              Watched
             </button>
           </div>
         </div>
@@ -241,7 +238,7 @@ function MovieDetail() {
                         {new Date(review.created_at).toLocaleDateString()}
                       </div>
                     </div>
-                    <div className="text-yellow-500 font-bold">⭐ {review.rating}/10</div>
+                    <div className="text-yellow-500 font-bold">{review.rating}/10</div>
                   </div>
                   <p className="text-gray-700">{review.content}</p>
                 </div>

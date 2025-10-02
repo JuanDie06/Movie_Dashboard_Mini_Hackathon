@@ -43,7 +43,7 @@ function Watchlist() {
       await watchlistsAPI.update(id, { status: newStatus });
       fetchWatchlist();
       fetchStats();
-      toast.success(`✅ Moved to ${statusName}!`);
+      toast.success(`Moved to ${statusName}!`);
     } catch (err) {
       toast.error('Failed to update status');
     }
@@ -55,7 +55,7 @@ function Watchlist() {
         await watchlistsAPI.delete(id);
         fetchWatchlist();
         fetchStats();
-        toast.success('🗑️ Removed from watchlist');
+        toast.success('Removed from watchlist');
       } catch (err) {
         toast.error('Failed to remove from watchlist');
       }
@@ -168,7 +168,7 @@ function Watchlist() {
                   <h3 className="font-bold text-lg hover:text-blue-600">{item.movie.title}</h3>
                 </Link>
                 <div className="text-sm text-gray-600 mb-2">
-                  {item.movie.release_date?.split('-')[0]} · ⭐ {parseFloat(item.movie.vote_average).toFixed(1)}
+                  {item.movie.release_date?.split('-')[0]} · {parseFloat(item.movie.vote_average).toFixed(1)}/10
                 </div>
                 <div className="flex gap-2 flex-wrap mb-2">
                   {item.movie.genres?.map((genre) => (

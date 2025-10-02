@@ -158,7 +158,7 @@ function Movies() {
                 <div className="flex justify-between items-center text-xs text-gray-600">
                   <span>{movie.release_date?.split('-')[0]}</span>
                   <span className="flex items-center">
-                    ⭐ {parseFloat(movie.vote_average).toFixed(1)}
+                    {parseFloat(movie.vote_average).toFixed(1)}/10
                   </span>
                 </div>
               </div>

@@ -19,7 +19,7 @@ function Header() {
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <Link to="/" className="text-2xl font-bold hover:text-blue-200 transition no-underline cursor-pointer">
-            🎬 Movie Dashboard
+            Movie Dashboard
           </Link>
 
           {/* Navigation */}
