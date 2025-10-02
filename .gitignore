@@ -80,3 +80,7 @@ Thumbs.db
 # Test coverage
 coverage/
 
+# Documentation and API Testing
+documentation/
+postman/
+
