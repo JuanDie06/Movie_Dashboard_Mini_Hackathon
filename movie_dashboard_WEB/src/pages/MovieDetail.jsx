@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { moviesAPI, reviewsAPI, watchlistsAPI } from '../services/api';
 
 function MovieDetail() {
@@ -26,18 +27,19 @@ function MovieDetail() {
   };
 
   const handleAddToWatchlist = async (status) => {
+    const statusName = status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     try {
       await watchlistsAPI.create({
         movie_id: parseInt(id),
         status,
-        notes: `Added to ${status.replace('_', ' ')}`
+        notes: `Added to ${statusName}`
       });
-      alert(`Added to ${status.replace('_', ' ')} list!`);
+      toast.success(`✅ Added to ${statusName} list!`);
     } catch (err) {
       if (err.response?.data?.errors) {
-        alert(err.response.data.errors.join(', '));
+        toast.error(err.response.data.errors.join(', '));
       } else {
-        alert('Failed to add to watchlist');
+        toast.error('Failed to add to watchlist');
       }
     }
   };
@@ -52,18 +54,35 @@ function MovieDetail() {
       setShowReviewForm(false);
       setReviewForm({ rating: 5, content: '', author_name: '' });
       fetchMovieDetails(); // Refresh to show new review
-      alert('Review submitted successfully!');
+      toast.success('⭐ Review submitted successfully!');
     } catch (err) {
-      alert('Failed to submit review');
+      const errorMsg = err.response?.data?.errors?.join(', ') || 'Failed to submit review';
+      toast.error(errorMsg);
     }
   };
 
   if (loading) {
-    return <div className="container mx-auto px-4 py-8">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
+          <div className="text-xl text-gray-600">Loading movie details...</div>
+        </div>
+      </div>
+    );
   }
 
   if (!movie) {
-    return <div className="container mx-auto px-4 py-8">Movie not found</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <div className="text-2xl mb-4">🎬 Movie not found</div>
+          <Link to="/movies" className="text-blue-600 hover:underline">
+            Browse all movies
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -100,8 +119,9 @@ function MovieDetail() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Genres & Actions */}
-        <div className="flex flex-wrap gap-4 mb-8">
+        {/* Genres */}
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-3">Genres</h3>
           <div className="flex gap-2 flex-wrap">
             {movie.genres?.map((genre) => (
               <Link
@@ -113,24 +133,32 @@ function MovieDetail() {
               </Link>
             ))}
           </div>
-          <div className="flex gap-2 ml-auto">
+        </div>
+
+        {/* Watchlist Actions */}
+        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+          <h3 className="text-lg font-semibold mb-4">📝 Add to Watchlist</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
               onClick={() => handleAddToWatchlist('want_to_watch')}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-md hover:shadow-lg"
             >
-              + Want to Watch
+              <span>📌</span>
+              <span>Want to Watch</span>
             </button>
             <button
               onClick={() => handleAddToWatchlist('watching')}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition shadow-md hover:shadow-lg"
             >
-              + Watching
+              <span>▶️</span>
+              <span>Watching</span>
             </button>
             <button
               onClick={() => handleAddToWatchlist('watched')}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition shadow-md hover:shadow-lg"
             >
-              + Watched
+              <span>✅</span>
+              <span>Watched</span>
             </button>
           </div>
         </div>

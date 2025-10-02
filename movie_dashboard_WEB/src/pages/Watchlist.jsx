@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { watchlistsAPI } from '../services/api';
 
 function Watchlist() {
@@ -37,12 +38,14 @@ function Watchlist() {
   };
 
   const handleUpdateStatus = async (id, newStatus) => {
+    const statusName = newStatus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     try {
       await watchlistsAPI.update(id, { status: newStatus });
       fetchWatchlist();
       fetchStats();
+      toast.success(`✅ Moved to ${statusName}!`);
     } catch (err) {
-      alert('Failed to update status');
+      toast.error('Failed to update status');
     }
   };
 
@@ -52,8 +55,9 @@ function Watchlist() {
         await watchlistsAPI.delete(id);
         fetchWatchlist();
         fetchStats();
+        toast.success('🗑️ Removed from watchlist');
       } catch (err) {
-        alert('Failed to remove from watchlist');
+        toast.error('Failed to remove from watchlist');
       }
     }
   };
