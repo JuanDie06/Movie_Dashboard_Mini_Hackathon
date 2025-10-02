@@ -1,0 +1,646 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-10-02T19:30:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_movie_dashboard",
+      "_type": "workspace",
+      "name": "Movie Dashboard API",
+      "description": "Complete REST API for Movie Dashboard - Rails Backend",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000/api/v1"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1
+    },
+    {
+      "_id": "fld_movies",
+      "_type": "request_group",
+      "name": "Movies",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1
+    },
+    {
+      "_id": "req_movies_list",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "List All Movies",
+      "url": "{{ _.base_url }}/movies?page=1&per_page=20",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "description": "Page number"
+        },
+        {
+          "name": "per_page",
+          "value": "20",
+          "description": "Items per page"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1,
+      "description": "Get all movies with pagination"
+    },
+    {
+      "_id": "req_movies_search",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "Search Movies",
+      "url": "{{ _.base_url }}/movies?search=Mission",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "search",
+          "value": "Mission",
+          "description": "Search by title"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -2,
+      "description": "Search movies by title (case-insensitive)"
+    },
+    {
+      "_id": "req_movies_by_genre",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "Filter by Genre",
+      "url": "{{ _.base_url }}/movies?genre_id=39",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "genre_id",
+          "value": "39",
+          "description": "Genre ID (39 = Action)"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -3,
+      "description": "Get movies by genre"
+    },
+    {
+      "_id": "req_movies_show",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "Get Single Movie",
+      "url": "{{ _.base_url }}/movies/42",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -4,
+      "description": "Get movie details with genres, reviews, watchlists"
+    },
+    {
+      "_id": "req_movies_popular",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "Get Popular Movies",
+      "url": "{{ _.base_url }}/movies/popular?page=1",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -5,
+      "description": "Get popular movies sorted by rating"
+    },
+    {
+      "_id": "req_movies_recent",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "Get Recent Movies",
+      "url": "{{ _.base_url }}/movies/recent",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -6,
+      "description": "Get recently added movies"
+    },
+    {
+      "_id": "req_movies_create",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "Create Movie",
+      "url": "{{ _.base_url }}/movies",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"movie\": {\n    \"tmdb_id\": 12345,\n    \"title\": \"Test Movie\",\n    \"overview\": \"This is a test movie\",\n    \"release_date\": \"2025-12-31\",\n    \"poster_path\": \"/test.jpg\",\n    \"backdrop_path\": \"/test_backdrop.jpg\",\n    \"vote_average\": 8.5,\n    \"vote_count\": 100,\n    \"runtime\": 120,\n    \"status\": \"Released\"\n  },\n  \"genre_ids\": [39, 40]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -7,
+      "description": "Create a new movie"
+    },
+    {
+      "_id": "req_movies_update",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "Update Movie",
+      "url": "{{ _.base_url }}/movies/42",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"movie\": {\n    \"title\": \"Updated Movie Title\",\n    \"overview\": \"Updated overview\",\n    \"vote_average\": 9.0\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -8,
+      "description": "Update movie details"
+    },
+    {
+      "_id": "req_movies_delete",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "Delete Movie",
+      "url": "{{ _.base_url }}/movies/42",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -9,
+      "description": "Delete a movie"
+    },
+    {
+      "_id": "req_movies_sync_tmdb",
+      "_type": "request",
+      "parentId": "fld_movies",
+      "name": "Sync from TMDB",
+      "url": "{{ _.base_url }}/movies/sync_from_tmdb",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"tmdb_id\": 550\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -10,
+      "description": "Sync movie from TMDB (550 = Fight Club)"
+    },
+    {
+      "_id": "fld_genres",
+      "_type": "request_group",
+      "name": "Genres",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -2
+    },
+    {
+      "_id": "req_genres_list",
+      "_type": "request",
+      "parentId": "fld_genres",
+      "name": "List All Genres",
+      "url": "{{ _.base_url }}/genres",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1,
+      "description": "Get all genres with movie counts"
+    },
+    {
+      "_id": "req_genres_show",
+      "_type": "request",
+      "parentId": "fld_genres",
+      "name": "Get Single Genre",
+      "url": "{{ _.base_url }}/genres/39",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -2,
+      "description": "Get genre details with all movies"
+    },
+    {
+      "_id": "req_genres_movies",
+      "_type": "request",
+      "parentId": "fld_genres",
+      "name": "Get Movies by Genre",
+      "url": "{{ _.base_url }}/genres/39/movies?page=1",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -3,
+      "description": "Get all movies for a genre (paginated)"
+    },
+    {
+      "_id": "req_genres_create",
+      "_type": "request",
+      "parentId": "fld_genres",
+      "name": "Create Genre",
+      "url": "{{ _.base_url }}/genres",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"genre\": {\n    \"name\": \"Superhero\",\n    \"tmdb_id\": 999\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -4,
+      "description": "Create a new genre"
+    },
+    {
+      "_id": "req_genres_update",
+      "_type": "request",
+      "parentId": "fld_genres",
+      "name": "Update Genre",
+      "url": "{{ _.base_url }}/genres/39",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"genre\": {\n    \"name\": \"Updated Genre Name\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -5,
+      "description": "Update genre name"
+    },
+    {
+      "_id": "req_genres_delete",
+      "_type": "request",
+      "parentId": "fld_genres",
+      "name": "Delete Genre",
+      "url": "{{ _.base_url }}/genres/39",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -6,
+      "description": "Delete a genre"
+    },
+    {
+      "_id": "fld_reviews",
+      "_type": "request_group",
+      "name": "Reviews",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -3
+    },
+    {
+      "_id": "req_reviews_list",
+      "_type": "request",
+      "parentId": "fld_reviews",
+      "name": "List All Reviews",
+      "url": "{{ _.base_url }}/reviews?page=1",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1,
+      "description": "Get all reviews with pagination"
+    },
+    {
+      "_id": "req_reviews_by_movie",
+      "_type": "request",
+      "parentId": "fld_reviews",
+      "name": "Get Reviews for Movie",
+      "url": "{{ _.base_url }}/reviews?movie_id=42",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "movie_id",
+          "value": "42",
+          "description": "Filter by movie ID"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -2,
+      "description": "Get all reviews for a specific movie"
+    },
+    {
+      "_id": "req_reviews_highest_rated",
+      "_type": "request",
+      "parentId": "fld_reviews",
+      "name": "Get Highest Rated Reviews",
+      "url": "{{ _.base_url }}/reviews/highest_rated",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -3,
+      "description": "Get reviews sorted by rating (highest first)"
+    },
+    {
+      "_id": "req_reviews_show",
+      "_type": "request",
+      "parentId": "fld_reviews",
+      "name": "Get Single Review",
+      "url": "{{ _.base_url }}/reviews/21",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -4,
+      "description": "Get review details"
+    },
+    {
+      "_id": "req_reviews_create",
+      "_type": "request",
+      "parentId": "fld_reviews",
+      "name": "Create Review",
+      "url": "{{ _.base_url }}/reviews",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"movie_id\": 42,\n  \"review\": {\n    \"rating\": 9,\n    \"content\": \"Amazing movie! The visual effects were stunning and the story was engaging. Highly recommended!\",\n    \"author_name\": \"John Doe\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -5,
+      "description": "Create review (rating 1-10, content min 10 chars)"
+    },
+    {
+      "_id": "req_reviews_update",
+      "_type": "request",
+      "parentId": "fld_reviews",
+      "name": "Update Review",
+      "url": "{{ _.base_url }}/reviews/21",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"review\": {\n    \"rating\": 10,\n    \"content\": \"Updated review: This movie is absolutely perfect! A masterpiece!\",\n    \"author_name\": \"John Doe\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -6,
+      "description": "Update an existing review"
+    },
+    {
+      "_id": "req_reviews_delete",
+      "_type": "request",
+      "parentId": "fld_reviews",
+      "name": "Delete Review",
+      "url": "{{ _.base_url }}/reviews/21",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -7,
+      "description": "Delete a review"
+    },
+    {
+      "_id": "fld_watchlists",
+      "_type": "request_group",
+      "name": "Watchlists",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -4
+    },
+    {
+      "_id": "req_watchlists_list",
+      "_type": "request",
+      "parentId": "fld_watchlists",
+      "name": "List All Watchlist Items",
+      "url": "{{ _.base_url }}/watchlists?page=1",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1,
+      "description": "Get all watchlist items"
+    },
+    {
+      "_id": "req_watchlists_want_to_watch",
+      "_type": "request",
+      "parentId": "fld_watchlists",
+      "name": "Filter: Want to Watch",
+      "url": "{{ _.base_url }}/watchlists?status=want_to_watch",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "status",
+          "value": "want_to_watch"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -2,
+      "description": "Get movies user wants to watch"
+    },
+    {
+      "_id": "req_watchlists_watching",
+      "_type": "request",
+      "parentId": "fld_watchlists",
+      "name": "Filter: Watching",
+      "url": "{{ _.base_url }}/watchlists?status=watching",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "status",
+          "value": "watching"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -3,
+      "description": "Get movies user is currently watching"
+    },
+    {
+      "_id": "req_watchlists_watched",
+      "_type": "request",
+      "parentId": "fld_watchlists",
+      "name": "Filter: Watched",
+      "url": "{{ _.base_url }}/watchlists?status=watched",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "status",
+          "value": "watched"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -4,
+      "description": "Get movies user has already watched"
+    },
+    {
+      "_id": "req_watchlists_stats",
+      "_type": "request",
+      "parentId": "fld_watchlists",
+      "name": "Get Watchlist Stats",
+      "url": "{{ _.base_url }}/watchlists/stats",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -5,
+      "description": "Get statistics (total, counts by status)"
+    },
+    {
+      "_id": "req_watchlists_show",
+      "_type": "request",
+      "parentId": "fld_watchlists",
+      "name": "Get Single Watchlist Item",
+      "url": "{{ _.base_url }}/watchlists/1",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -6,
+      "description": "Get watchlist item details"
+    },
+    {
+      "_id": "req_watchlists_create",
+      "_type": "request",
+      "parentId": "fld_watchlists",
+      "name": "Add to Watchlist",
+      "url": "{{ _.base_url }}/watchlists",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"watchlist\": {\n    \"movie_id\": 44,\n    \"status\": \"want_to_watch\",\n    \"notes\": \"Looks really interesting, want to watch this weekend\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -7,
+      "description": "Add movie to watchlist (status: want_to_watch, watching, watched)"
+    },
+    {
+      "_id": "req_watchlists_update",
+      "_type": "request",
+      "parentId": "fld_watchlists",
+      "name": "Update Watchlist Item",
+      "url": "{{ _.base_url }}/watchlists/1",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"watchlist\": {\n    \"status\": \"watched\",\n    \"notes\": \"Finished watching. Great movie!\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -8,
+      "description": "Update watchlist (change status or notes)"
+    },
+    {
+      "_id": "req_watchlists_delete",
+      "_type": "request",
+      "parentId": "fld_watchlists",
+      "name": "Remove from Watchlist",
+      "url": "{{ _.base_url }}/watchlists/1",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -9,
+      "description": "Remove movie from watchlist"
+    }
+  ]
+}
+
