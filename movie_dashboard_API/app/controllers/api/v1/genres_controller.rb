@@ -1,10 +1,10 @@
 class Api::V1::GenresController < ApplicationController
-  before_action :set_genre, only: [:show, :update, :destroy, :movies]
+  before_action :set_genre, only: [ :show, :update, :destroy, :movies ]
 
   # GET /api/v1/genres
   def index
     @genres = Genre.all.order(:name)
-    
+
     render json: @genres.as_json(
       methods: :movies_count
     )
@@ -15,7 +15,7 @@ class Api::V1::GenresController < ApplicationController
     render json: @genre.as_json(
       include: {
         movies: {
-          only: [:id, :title, :poster_path, :vote_average, :release_date]
+          only: [ :id, :title, :poster_path, :vote_average, :release_date ]
         }
       }
     )
@@ -55,7 +55,7 @@ class Api::V1::GenresController < ApplicationController
                     .order(vote_average: :desc, vote_count: :desc)
                     .page(params[:page] || 1)
                     .per(params[:per_page] || 20)
-    
+
     render json: {
       genre: @genre,
       movies: @movies.as_json(include: :genres),
@@ -72,7 +72,7 @@ class Api::V1::GenresController < ApplicationController
   def set_genre
     @genre = Genre.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Genre not found' }, status: :not_found
+    render json: { error: "Genre not found" }, status: :not_found
   end
 
   def genre_params
@@ -83,7 +83,7 @@ end
 # Add helper method to Genre model
 class Genre < ApplicationRecord
   # ... existing code ...
-  
+
   def movies_count
     movies.count
   end

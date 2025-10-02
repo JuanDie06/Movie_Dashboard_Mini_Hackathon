@@ -1,32 +1,32 @@
 class Api::V1::WatchlistsController < ApplicationController
-  before_action :set_watchlist, only: [:show, :update, :destroy]
+  before_action :set_watchlist, only: [ :show, :update, :destroy ]
 
   # GET /api/v1/watchlists
   # GET /api/v1/watchlists?status=want_to_watch
   def index
     @watchlists = Watchlist.includes(:movie).order(created_at: :desc)
-    
+
     # Filter by status if provided
     if params[:status].present?
       case params[:status]
-      when 'want_to_watch'
+      when "want_to_watch"
         @watchlists = @watchlists.want_to_watch
-      when 'watching'
+      when "watching"
         @watchlists = @watchlists.watching
-      when 'watched'
+      when "watched"
         @watchlists = @watchlists.watched
       end
     end
-    
+
     # Pagination
     @watchlists = @watchlists.page(params[:page] || 1).per(params[:per_page] || 20)
-    
+
     render json: {
       watchlists: @watchlists.as_json(
         include: {
           movie: {
-            only: [:id, :title, :poster_path, :release_date, :vote_average],
-            include: { genres: { only: [:id, :name] } }
+            only: [ :id, :title, :poster_path, :release_date, :vote_average ],
+            include: { genres: { only: [ :id, :name ] } }
           }
         }
       ),
@@ -91,7 +91,7 @@ class Api::V1::WatchlistsController < ApplicationController
   def set_watchlist
     @watchlist = Watchlist.includes(:movie).find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Watchlist item not found' }, status: :not_found
+    render json: { error: "Watchlist item not found" }, status: :not_found
   end
 
   def watchlist_params
