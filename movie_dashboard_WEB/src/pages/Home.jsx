@@ -1,5 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
-import useEmblaCarousel from 'embla-carousel-react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { moviesAPI } from '../services/api';
 
@@ -53,24 +52,6 @@ function Home() {
     );
   }
 
-  // Build slides of 3 (non-loop first)
-  const slides = useMemo(() => {
-    const list = (movies || []).slice(0, 12);
-    const chunks = [];
-    for (let i = 0; i < list.length; i += 3) chunks.push(list.slice(i, i + 3));
-    return chunks;
-  }, [movies]);
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    align: 'start',
-    duration: 20, // ~400ms
-  });
-
-  const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
-  const scrollNext = () => emblaApi && emblaApi.scrollNext();
-  const scrollTo = (i) => emblaApi && emblaApi.scrollTo(i);
-
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
@@ -79,56 +60,44 @@ function Home() {
         <p className="text-xl opacity-90">Browse through trending and popular movies from around the world</p>
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-3xl font-bold">Popular Right Now</h2>
-        {slides.length > 1 && (
-          <div className="hidden md:flex gap-2">
-            <button onClick={scrollPrev} className="px-3 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition shadow">◀</button>
-            <button onClick={scrollNext} className="px-3 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition shadow">▶</button>
-          </div>
-        )}
-      </div>
-
-      {/* Embla viewport */}
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
-          {slides.map((slide, idx) => (
-            <div key={idx} className="w-full shrink-0 px-1 md:px-2">
-              <div className="grid grid-cols-3 gap-3 md:gap-4">
-                {slide.map((movie) => (
-                  <Link key={movie.id} to={`/movies/${movie.id}`} className="bg-white rounded-lg shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden group">
-                    <div className="relative overflow-hidden">
-                      {movie.poster_path ? (
-                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-300" />
-                      ) : (
-                        <div className="w-full h-72 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                          <span className="text-gray-400 text-sm">No Image</span>
-                        </div>
-                      )}
-                      <div className="absolute top-2 right-2 bg-black bg-opacity-80 text-white px-2 py-1 rounded-lg text-xs">
-                        {Number(movie.vote_average ?? 0).toFixed(1)} / 10
-                      </div>
-                    </div>
-                    <div className="p-3">
-                      <h3 className="font-bold text-base md:text-lg mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors">{movie.title}</h3>
-                      <div className="text-sm text-gray-600">{movie.release_date?.split('-')[0] || 'N/A'}</div>
-                    </div>
-                  </Link>
-                ))}
+      <h2 className="text-3xl font-bold mb-6">Popular Right Now</h2>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        {movies.map((movie) => (
+          <Link
+            key={movie.id}
+            to={`/movies/${movie.id}`}
+            className="bg-white rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden group"
+          >
+            <div className="relative overflow-hidden">
+              {movie.poster_path ? (
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              ) : (
+                <div className="w-full h-80 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                  <span className="text-gray-400 text-sm">No Image</span>
+                </div>
+              )}
+              {/* Rating Badge */}
+              <div className="absolute top-2 right-2 bg-black bg-opacity-80 text-white px-2 py-1 rounded-lg flex items-center gap-1">
+                <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+                <span className="font-bold">{parseFloat(movie.vote_average).toFixed(1)}</span>
               </div>
             </div>
-          ))}
-        </div>
+            <div className="p-4">
+              <h3 className="font-bold text-lg mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">{movie.title}</h3>
+              <div className="text-sm text-gray-600">
+                <span>{movie.release_date?.split('-')[0] || 'N/A'}</span>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
-
-      {/* Dots */}
-      {slides.length > 1 && (
-        <div className="flex justify-center gap-2 mt-4">
-          {slides.map((_, i) => (
-            <button key={i} onClick={() => scrollTo(i)} className="h-2.5 w-2.5 rounded-full bg-gray-300 hover:bg-gray-400" />
-          ))}
-        </div>
-      )}
     </div>
   );
 }
