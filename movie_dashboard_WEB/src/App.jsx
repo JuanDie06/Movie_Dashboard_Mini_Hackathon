@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Movies from './pages/Movies';
 import MovieDetail from './pages/MovieDetail';
 import Watchlist from './pages/Watchlist';
+// import Bookings from './pages/Bookings';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/movies" element={<Movies />} />
           <Route path="/movies/:id" element={<MovieDetail />} />
           <Route path="/watchlist" element={<Watchlist />} />
+          {/* <Route path="/bookings" element={<Bookings />} /> */}
           <Route path="*" element={
             <div className="container-app py-16 text-center">
               <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>404 - Page Not Found</h1>
