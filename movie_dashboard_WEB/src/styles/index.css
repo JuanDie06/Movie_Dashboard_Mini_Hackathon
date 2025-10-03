@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+/* ====== THEME TOKENS (Tailwind v4: @theme) ====== */
+@theme {
+  --color-bg-app: #0B1020;
+  --color-surface: #0F172A;
+  --color-border: rgba(148,163,184,.25);
+
+  --color-text: #E5E7EB;
+  --color-text-muted: #94A3B8;
+
+  --color-primary: #2563EB;      /* blue-600 */
+  --color-primary-600: #2563EB;
+  --color-primary-700: #1D4ED8;
+
+  --color-secondary: #7C3AED;    /* violet-600 */
+  --color-accent: #F59E0B;       /* amber-500 */
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* ====== GLOBAL RESETS ====== */
+:root {
+  color-scheme: dark;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--color-bg-app);
+}
+
+body {
+  color: var(--color-text);
+}
+
+/* ====== UTILIDADES PERSONALIZADAS (Tailwind v4: @utility) ====== */
+@utility container-app {
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+@utility card {
+  @apply bg-[var(--color-surface)] border border-[var(--color-border)]
+         rounded-[var(--radius-xl)] shadow-sm;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center font-semibold rounded-[var(--radius-lg)]
+         transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)];
+  height: 2.5rem;
+  padding-inline: 1rem;
+}
+
+@utility btn-primary {
+  @apply btn bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-700)];
+}
+
+@utility btn-secondary {
+  @apply btn bg-[var(--color-secondary)] text-white hover:bg-violet-700;
+}
+
+@utility btn-ghost {
+  @apply btn bg-transparent text-[var(--color-text)] hover:bg-white/5;
+}
+
+@utility btn-danger {
+  @apply btn bg-rose-600 text-white hover:bg-rose-700;
+}
+
+@utility badge {
+  @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium
+         bg-white/10 text-[var(--color-text)];
+}
+
+@utility input {
+  @apply w-full rounded-[var(--radius-lg)] bg-white/5 text-[var(--color-text)]
+         placeholder:[color:var(--color-text-muted)] border border-[var(--color-border)]
+         focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] px-4 py-2;
+}
+
+@utility heading-hero {
+  @apply text-4xl sm:text-5xl font-black tracking-tight;
+}
+
+@utility heading-section {
+  @apply text-2xl sm:text-3xl font-bold;
+}
+

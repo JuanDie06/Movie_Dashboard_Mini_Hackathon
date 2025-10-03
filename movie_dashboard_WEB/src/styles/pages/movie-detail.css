@@ -1,0 +1,30 @@
+@reference "../index.css";
+
+.detail-hero {
+  @apply relative h-96 bg-cover bg-center;
+}
+.detail-hero__overlay {
+  @apply absolute inset-0 bg-black/60;
+}
+.detail-hero__inner {
+  @apply container-app h-full flex items-end pb-8 relative z-10;
+}
+.detail__section {
+  @apply container-app py-8;
+}
+.detail__panel {
+  @apply card p-6 mb-8;
+}
+.detail__title {
+  @apply text-4xl sm:text-5xl font-black mb-2 text-white;
+}
+.detail__meta {
+  @apply flex gap-4 text-base text-white/90;
+}
+.genre-link {
+  @apply badge hover:bg-white/20 transition no-underline;
+}
+.actions-grid {
+  @apply grid grid-cols-1 sm:grid-cols-3 gap-3;
+}
+

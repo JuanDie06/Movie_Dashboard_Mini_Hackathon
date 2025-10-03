@@ -1,0 +1,37 @@
+@reference "../index.css";
+
+/* HERO */
+.hero {
+  @apply relative rounded-[var(--radius-xl)] p-8 sm:p-10 mb-8
+         bg-gradient-to-r from-blue-600 to-violet-600 text-white shadow-lg;
+}
+.hero__title {
+  @apply heading-hero mb-3;
+}
+.hero__subtitle {
+  @apply text-lg sm:text-xl text-white/90;
+}
+
+/* Sección */
+.section-head {
+  @apply flex items-center justify-between mb-4;
+}
+.section-head__title {
+  @apply heading-section;
+}
+
+/* Carrusel (scroll-snap) */
+.carousel {
+  @apply overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2;
+}
+.carousel__row {
+  @apply flex gap-6;
+}
+.carousel__item {
+  @apply snap-start basis-[calc(100%/1.05)] sm:basis-[calc(50%-12px)] md:basis-[calc(33.333%-16px)]
+         lg:basis-[calc(25%-18px)] xl:basis-[calc(20%-19px)] shrink-0;
+}
+.rating-chip {
+  @apply absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-bold;
+}
+

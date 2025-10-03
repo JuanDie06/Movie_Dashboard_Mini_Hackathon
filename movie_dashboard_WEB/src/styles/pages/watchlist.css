@@ -1,0 +1,39 @@
+@reference "../index.css";
+
+.watchlist__title {
+  @apply heading-section mb-8;
+}
+.stats {
+  @apply grid grid-cols-1 md:grid-cols-4 gap-4 mb-8;
+}
+.stat-card {
+  @apply card p-6 text-center;
+}
+.stat-card__value {
+  @apply text-3xl font-bold text-blue-300;
+}
+.tabs {
+  @apply flex gap-2 mb-6 flex-wrap;
+}
+.tab {
+  @apply btn-ghost;
+}
+.tab--active {
+  @apply bg-[var(--color-primary)] hover:bg-[var(--color-primary-700)] text-white;
+}
+.item {
+  @apply card p-4 flex gap-4 items-start;
+}
+.item__title {
+  @apply font-bold text-lg hover:text-blue-300 no-underline;
+}
+.item__meta {
+  @apply text-sm text-[var(--color-text-muted)] mb-2;
+}
+.item__genre {
+  @apply px-2 py-1 bg-white/10 text-[var(--color-text)] text-xs rounded;
+}
+.item__actions select {
+  @apply bg-white/5 border border-[var(--color-border)] rounded-[var(--radius-lg)] px-3 py-2 text-sm;
+}
+

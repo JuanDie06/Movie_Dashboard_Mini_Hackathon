@@ -1,0 +1,19 @@
+@reference "../index.css";
+
+.movies__title {
+  @apply heading-section mb-6;
+}
+.movies__toolbar {
+  @apply mb-6 flex flex-wrap gap-2;
+}
+.movies__grid {
+  @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-6;
+}
+.genre-chip {
+  @apply px-4 py-2 rounded-full bg-white/10 text-[var(--color-text)]
+         hover:bg-white/15 transition;
+}
+.genre-chip--active {
+  @apply bg-[var(--color-primary)] hover:bg-[var(--color-primary-700)] text-white;
+}
+
