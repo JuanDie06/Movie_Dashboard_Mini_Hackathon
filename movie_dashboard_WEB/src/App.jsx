@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import Movies from './pages/Movies';
 import MovieDetail from './pages/MovieDetail';
 import Watchlist from './pages/Watchlist';
+import Actors from './pages/Actors';
+import ActorDetail from './pages/ActorDetail';
 import Sites from './pages/Sites';
 
 function App() {
@@ -39,6 +41,8 @@ function App() {
           <Route path="/movies" element={<Movies />} />
           <Route path="/movies/:id" element={<MovieDetail />} />
           <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/actors" element={<Actors />} />
+          <Route path="/actors/:id" element={<ActorDetail />} />
           <Route path="/sites" element={<Sites />} />
           <Route path="*" element={
             <div className="container-app py-16 text-center">

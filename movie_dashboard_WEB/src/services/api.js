@@ -135,5 +135,32 @@ export const watchlistsAPI = {
   delete: (id) => api.delete(`/watchlists/${id}`),
 };
 
+// ===== ACTORS API =====
+export const actorsAPI = {
+  // Get all actors with optional filters
+  getAll: (params = {}) => api.get('/actors', { params }),
+  
+  // Search actors by name
+  search: (query, params = {}) => api.get('/actors', { params: { search: query, ...params } }),
+  
+  // Get popular actors
+  getPopular: (params = {}) => api.get('/actors/popular', { params }),
+  
+  // Get single actor by ID
+  getById: (id) => api.get(`/actors/${id}`),
+  
+  // Get actor's movies (filmography)
+  getMovies: (id) => api.get(`/actors/${id}/movies`),
+  
+  // Create actor
+  create: (actorData) => api.post('/actors', { actor: actorData }),
+  
+  // Update actor
+  update: (id, actorData) => api.put(`/actors/${id}`, { actor: actorData }),
+  
+  // Delete actor
+  delete: (id) => api.delete(`/actors/${id}`),
+};
+
 export default api;
 

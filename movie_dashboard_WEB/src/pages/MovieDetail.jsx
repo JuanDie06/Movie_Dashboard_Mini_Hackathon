@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { moviesAPI, reviewsAPI, watchlistsAPI } from '../services/api';
+import { User } from 'lucide-react';
 
 function MovieDetail() {
   const { id } = useParams();
@@ -164,6 +165,59 @@ function MovieDetail() {
           <div className="detail__panel">
             <h2 className="heading-section mb-3">Overview</h2>
             <p className="text-[var(--color-text-muted)] leading-relaxed">{movie.overview}</p>
+          </div>
+        )}
+
+        {/* Cast Section */}
+        {movie.movie_actors && movie.movie_actors.length > 0 && (
+          <div className="detail__panel">
+            <h2 className="heading-section mb-4">Cast</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {movie.movie_actors.slice(0, 10).map((movieActor, index) => (
+                <Link
+                  key={index}
+                  to={`/actors/${movieActor.actor.id}`}
+                  className="group flex flex-col items-center text-center"
+                >
+                  <div className="relative w-full aspect-[2/3] rounded-lg overflow-hidden bg-gradient-to-br from-slate-800 to-slate-700 mb-2">
+                    {movieActor.actor.profile_path || movieActor.actor.thumbnail_url ? (
+                      <img
+                        src={movieActor.actor.thumbnail_url || `https://image.tmdb.org/t/p/w185${movieActor.actor.profile_path}`}
+                        alt={movieActor.actor.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <User size={32} className="text-[var(--color-text-muted)]" />
+                      </div>
+                    )}
+                    {/* Cast Order Badge for top 3 */}
+                    {movieActor.cast_order < 3 && (
+                      <div className="absolute top-2 left-2 bg-[var(--color-primary)] text-white px-2 py-0.5 rounded text-xs font-bold">
+                        #{movieActor.cast_order + 1}
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-full">
+                    <p className="font-semibold text-sm text-[var(--color-text)] group-hover:text-blue-300 transition-colors line-clamp-2 mb-1">
+                      {movieActor.actor.name}
+                    </p>
+                    {movieActor.character_name && (
+                      <p className="text-xs text-[var(--color-text-muted)] italic line-clamp-2">
+                        as {movieActor.character_name}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+            {movie.movie_actors.length > 10 && (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-[var(--color-text-muted)]">
+                  Showing 10 of {movie.movie_actors.length} cast members
+                </p>
+              </div>
+            )}
           </div>
         )}
 
