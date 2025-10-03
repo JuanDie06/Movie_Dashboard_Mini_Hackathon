@@ -1,0 +1,197 @@
+---
+openapi: 3.0.1
+info:
+  title: Movie Dashboard API
+  version: v1
+  description: Full-stack movie dashboard application API integrating with TMDB. Provides
+    CRUD operations for Movies, Genres, Reviews, and Watchlists.
+paths:
+  "/api/v1/movies":
+    get:
+      summary: List all movies
+      tags:
+      - Movies
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Movies per page
+        required: false
+        schema:
+          type: integer
+      - name: search
+        in: query
+        description: Search query
+        required: false
+        schema:
+          type: string
+      - name: genre_id
+        in: query
+        description: Filter by genre ID
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  movies:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Movie"
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+    post:
+      summary: Create a movie
+      tags:
+      - Movies
+      parameters: []
+      responses:
+        '201':
+          description: movie created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                movie:
+                  type: object
+                  properties:
+                    tmdb_id:
+                      type: integer
+                    title:
+                      type: string
+                    overview:
+                      type: string
+                    release_date:
+                      type: string
+                      format: date
+                    poster_path:
+                      type: string
+                    backdrop_path:
+                      type: string
+                    vote_average:
+                      type: number
+                    vote_count:
+                      type: integer
+                    runtime:
+                      type: integer
+                  required:
+                  - title
+                  - tmdb_id
+  "/api/v1/movies/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Movie ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show movie details
+      tags:
+      - Movies
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Movie"
+        '404':
+          description: not found
+    put:
+      summary: Update a movie
+      tags:
+      - Movies
+      parameters: []
+      responses:
+        '200':
+          description: movie updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                movie:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    overview:
+                      type: string
+                    vote_average:
+                      type: number
+    delete:
+      summary: Delete a movie
+      tags:
+      - Movies
+      responses:
+        '204':
+          description: movie deleted
+servers:
+- url: http://localhost:3000
+  description: Development server
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: api.moviedashboard.com
+  description: Production server
+components:
+  schemas:
+    Movie:
+      type: object
+      properties:
+        id:
+          type: integer
+        tmdb_id:
+          type: integer
+        title:
+          type: string
+        overview:
+          type: string
+        release_date:
+          type: string
+          format: date
+        poster_path:
+          type: string
+        backdrop_path:
+          type: string
+        vote_average:
+          type: number
+          format: float
+        vote_count:
+          type: integer
+        runtime:
+          type: integer
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - title
+      - tmdb_id
