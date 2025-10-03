@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight, Star, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { watchlistsAPI } from '../services/api';
 
@@ -116,7 +117,7 @@ function Watchlist() {
         </button>
       </div>
 
-      {/* Watchlist Items */}
+      {/* Watchlist Items - Carousel */}
       {loading ? (
         <div className="text-center py-12 text-[var(--color-text-muted)]">Loading...</div>
       ) : watchlists.length === 0 ? (
@@ -127,65 +128,132 @@ function Watchlist() {
           </Link>
         </div>
       ) : (
-        <div className="space-y-4">
+        <WatchlistCarousel 
+          watchlists={watchlists} 
+          onUpdateStatus={handleUpdateStatus}
+          onRemove={handleRemove}
+        />
+      )}
+    </div>
+  );
+}
+
+// Watchlist Carousel Component
+function WatchlistCarousel({ watchlists, onUpdateStatus, onRemove }) {
+  const rowRef = useRef(null);
+
+  const scrollByAmount = (dir) => {
+    if (!rowRef.current) return;
+    const amount = rowRef.current.clientWidth * 0.8;
+    rowRef.current.scrollBy({ left: dir * amount, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="carousel-wrapper">
+      <div ref={rowRef} className="carousel">
+        <div className="carousel__row">
           {watchlists.map((item) => (
             <div
               key={item.id}
-              className="item"
+              className="carousel__item"
             >
-              <Link to={`/movies/${item.movie.id}`}>
-                {item.movie.poster_path ? (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w200${item.movie.poster_path}`}
-                    alt={item.movie.title}
-                    className="w-24 rounded"
-                  />
-                ) : (
-                  <div className="w-24 h-36 bg-gradient-to-br from-slate-800 to-slate-700 rounded flex items-center justify-center">
-                    <span className="text-[var(--color-text-muted)] text-xs">No Image</span>
+              <Link
+                to={`/movies/${item.movie.id}`}
+                className="movie-card"
+              >
+                <div className="relative overflow-hidden">
+                  {item.movie.poster_path ? (
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${item.movie.poster_path}`}
+                      alt={item.movie.title}
+                      className="w-full h-80 object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-80 bg-gradient-to-br from-slate-800 to-slate-700 flex items-center justify-center">
+                      <span className="text-[var(--color-text-muted)] text-sm">No Image</span>
+                    </div>
+                  )}
+                  <div className="rating-chip">
+                    <Star size={14} className="fill-yellow-400 text-yellow-400" />
+                    <span>{parseFloat(item.movie.vote_average).toFixed(1)}</span>
                   </div>
-                )}
-              </Link>
-              
-              <div className="flex-1">
-                <Link to={`/movies/${item.movie.id}`} className="item__title">
-                  {item.movie.title}
-                </Link>
-                <div className="item__meta">
-                  {item.movie.release_date?.split('-')[0]} · {parseFloat(item.movie.vote_average).toFixed(1)}/10
                 </div>
-                <div className="flex gap-2 flex-wrap mb-2">
-                  {item.movie.genres?.map((genre) => (
-                    <span key={genre.id} className="item__genre">
-                      {genre.name}
-                    </span>
-                  ))}
-                </div>
-                {item.notes && (
-                  <p className="text-sm text-[var(--color-text-muted)] italic">"{item.notes}"</p>
-                )}
-              </div>
+                
+                <div className="p-4">
+                  <h3 className="movie-card__title text-[var(--color-text)]">
+                    {item.movie.title}
+                  </h3>
+                  <div className="movie-card__meta mb-3">
+                    <span>{item.movie.release_date?.split('-')[0] || 'N/A'}</span>
+                    <span>{parseFloat(item.movie.vote_average).toFixed(1)}/10</span>
+                  </div>
+                  
+                  {/* Genre Tags */}
+                  <div className="flex gap-1 flex-wrap mb-3">
+                    {item.movie.genres?.slice(0, 2).map((genre) => (
+                      <span key={genre.id} className="text-xs px-2 py-1 bg-white/10 rounded text-[var(--color-text-muted)]">
+                        {genre.name}
+                      </span>
+                    ))}
+                  </div>
 
-              <div className="flex flex-col gap-2">
+                  {/* Notes */}
+                  {item.notes && (
+                    <p className="text-xs text-[var(--color-text-muted)] italic mb-3 line-clamp-2">
+                      "{item.notes}"
+                    </p>
+                  )}
+                </div>
+              </Link>
+
+              {/* Action Buttons - Outside the Link */}
+              <div className="px-4 pb-4 flex flex-col gap-2" onClick={(e) => e.stopPropagation()}>
                 <select
                   value={item.status}
-                  onChange={(e) => handleUpdateStatus(item.id, e.target.value)}
-                  className="item__actions"
+                  onChange={(e) => {
+                    e.preventDefault();
+                    onUpdateStatus(item.id, e.target.value);
+                  }}
+                  className="w-full px-3 py-2 text-sm bg-white/8 border border-[var(--color-border)] rounded-lg text-[var(--color-text)] cursor-pointer hover:bg-white/12 transition"
                 >
                   <option value="want_to_watch">Want to Watch</option>
                   <option value="watching">Watching</option>
                   <option value="watched">Watched</option>
                 </select>
                 <button
-                  onClick={() => handleRemove(item.id)}
-                  className="btn-danger text-sm"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onRemove(item.id);
+                  }}
+                  className="w-full px-3 py-2 text-sm bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition flex items-center justify-center gap-2"
                 >
+                  <Trash2 size={14} />
                   Remove
                 </button>
               </div>
             </div>
           ))}
         </div>
+      </div>
+      
+      {/* Overlay Arrow Buttons */}
+      {watchlists && watchlists.length > 3 && (
+        <>
+          <button 
+            onClick={() => scrollByAmount(-1)} 
+            className="carousel-arrow carousel-arrow--left"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft size={28} />
+          </button>
+          <button 
+            onClick={() => scrollByAmount(1)} 
+            className="carousel-arrow carousel-arrow--right"
+            aria-label="Scroll right"
+          >
+            <ChevronRight size={28} />
+          </button>
+        </>
       )}
     </div>
   );

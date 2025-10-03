@@ -63,10 +63,10 @@ function MovieDetail() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="container-app min-h-[60vh] grid place-items-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
-          <div className="text-xl text-gray-600">Loading movie details...</div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[var(--color-primary)]"></div>
+          <div className="text-lg text-[var(--color-text)]">Loading movie details...</div>
         </div>
       </div>
     );
@@ -74,10 +74,10 @@ function MovieDetail() {
 
   if (!movie) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="container-app min-h-[60vh] grid place-items-center">
         <div className="text-center">
-          <div className="text-2xl mb-4">Movie not found</div>
-          <Link to="/movies" className="text-blue-600 hover:underline">
+          <div className="text-2xl mb-4 text-[var(--color-text)]">Movie not found</div>
+          <Link to="/movies" className="text-[var(--color-primary)] hover:underline">
             Browse all movies
           </Link>
         </div>
@@ -86,29 +86,28 @@ function MovieDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <div 
-        className="relative h-96 bg-cover bg-center"
+      <div className="detail-hero"
         style={{
           backgroundImage: movie.backdrop_path 
             ? `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
             : 'none'
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
-        <div className="container mx-auto px-4 h-full flex items-end pb-8 relative z-10">
+        <div className="detail-hero__overlay"></div>
+        <div className="detail-hero__inner">
           <div className="flex gap-6 items-end">
             {movie.poster_path && (
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
-                className="w-48 rounded-lg shadow-2xl"
+                className="w-48 rounded-xl shadow-2xl"
               />
             )}
-            <div className="text-white pb-4">
-              <h1 className="text-5xl font-bold mb-2">{movie.title}</h1>
-              <div className="flex gap-4 text-lg">
+            <div className="pb-4">
+              <h1 className="detail__title">{movie.title}</h1>
+              <div className="detail__meta">
                 <span>{movie.release_date?.split('-')[0]}</span>
                 <span>{parseFloat(movie.vote_average).toFixed(1)}/10</span>
                 {movie.runtime && <span>{movie.runtime} min</span>}
@@ -118,16 +117,16 @@ function MovieDetail() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="detail__section">
         {/* Genres */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3">Genres</h3>
+          <h3 className="text-sm font-semibold mb-3 text-[var(--color-text-muted)]">Genres</h3>
           <div className="flex gap-2 flex-wrap">
             {movie.genres?.map((genre) => (
               <Link
                 key={genre.id}
                 to={`/movies?genre=${genre.id}`}
-                className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition"
+                className="genre-link"
               >
                 {genre.name}
               </Link>
@@ -136,24 +135,24 @@ function MovieDetail() {
         </div>
 
         {/* Watchlist Actions */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h3 className="text-lg font-semibold mb-4">Add to Watchlist</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="detail__panel">
+          <h3 className="text-lg font-semibold mb-4 text-[var(--color-text)]">Add to Watchlist</h3>
+          <div className="actions-grid">
             <button
               onClick={() => handleAddToWatchlist('want_to_watch')}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-md hover:shadow-lg"
+              className="btn-primary"
             >
               Want to Watch
             </button>
             <button
               onClick={() => handleAddToWatchlist('watching')}
-              className="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition shadow-md hover:shadow-lg"
+              className="btn-secondary"
             >
               Watching
             </button>
             <button
               onClick={() => handleAddToWatchlist('watched')}
-              className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition shadow-md hover:shadow-lg"
+              className="btn-ghost"
             >
               Watched
             </button>
@@ -162,19 +161,19 @@ function MovieDetail() {
 
         {/* Overview */}
         {movie.overview && (
-          <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 className="text-2xl font-bold mb-4">Overview</h2>
-            <p className="text-gray-700 leading-relaxed">{movie.overview}</p>
+          <div className="detail__panel">
+            <h2 className="heading-section mb-3">Overview</h2>
+            <p className="text-[var(--color-text-muted)] leading-relaxed">{movie.overview}</p>
           </div>
         )}
 
         {/* Reviews Section */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="detail__panel">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Reviews ({movie.reviews?.length || 0})</h2>
+            <h2 className="heading-section">Reviews ({movie.reviews?.length || 0})</h2>
             <button
               onClick={() => setShowReviewForm(!showReviewForm)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className="btn-primary"
             >
               {showReviewForm ? 'Cancel' : 'Write Review'}
             </button>
@@ -182,42 +181,42 @@ function MovieDetail() {
 
           {/* Review Form */}
           {showReviewForm && (
-            <form onSubmit={handleSubmitReview} className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <form onSubmit={handleSubmitReview} className="mb-6 p-4 bg-white/5 border border-[var(--color-border)] rounded-[var(--radius-xl)]">
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Rating (1-10)</label>
+                <label className="block text-sm font-medium mb-2 text-[var(--color-text)]">Rating (1-10)</label>
                 <input
                   type="number"
                   min="1"
                   max="10"
                   value={reviewForm.rating}
                   onChange={(e) => setReviewForm({...reviewForm, rating: parseInt(e.target.value)})}
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="input"
                   required
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Your Name</label>
+                <label className="block text-sm font-medium mb-2 text-[var(--color-text)]">Your Name</label>
                 <input
                   type="text"
                   value={reviewForm.author_name}
                   onChange={(e) => setReviewForm({...reviewForm, author_name: e.target.value})}
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="input"
                   required
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Review (min 10 characters)</label>
+                <label className="block text-sm font-medium mb-2 text-[var(--color-text)]">Review (min 10 characters)</label>
                 <textarea
                   value={reviewForm.content}
                   onChange={(e) => setReviewForm({...reviewForm, content: e.target.value})}
-                  className="w-full px-4 py-2 border rounded-lg h-32"
+                  className="input h-32"
                   required
                   minLength={10}
                 />
               </div>
               <button
                 type="submit"
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                className="btn-primary"
               >
                 Submit Review
               </button>
@@ -227,20 +226,20 @@ function MovieDetail() {
           {/* Reviews List */}
           <div className="space-y-4">
             {movie.reviews?.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No reviews yet. Be the first to review!</p>
+              <p className="text-[var(--color-text-muted)] text-center py-8">No reviews yet. Be the first to review!</p>
             ) : (
               movie.reviews?.map((review) => (
-                <div key={review.id} className="border-b pb-4">
+                <div key={review.id} className="border-b border-[var(--color-border)] pb-4">
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <h4 className="font-bold">{review.author_name}</h4>
-                      <div className="text-sm text-gray-500">
+                      <h4 className="font-bold text-[var(--color-text)]">{review.author_name}</h4>
+                      <div className="text-sm text-[var(--color-text-muted)]">
                         {new Date(review.created_at).toLocaleDateString()}
                       </div>
                     </div>
-                    <div className="text-yellow-500 font-bold">{review.rating}/10</div>
+                    <div className="text-yellow-400 font-bold">{review.rating}/10</div>
                   </div>
-                  <p className="text-gray-700">{review.content}</p>
+                  <p className="text-[var(--color-text-muted)]">{review.content}</p>
                 </div>
               ))
             )}
