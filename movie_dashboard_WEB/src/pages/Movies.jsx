@@ -66,48 +66,42 @@ function Movies() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Browse Movies</h1>
+    <div className="container-app py-8">
+      <h1 className="movies__title">Browse Movies</h1>
       
       {/* Search Bar */}
-      <form onSubmit={handleSearch} className="mb-6">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            name="search"
-            defaultValue={searchQuery}
-            placeholder="Search movies..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+      <form onSubmit={handleSearch} className="movies__toolbar">
+        <input
+          type="text"
+          name="search"
+          defaultValue={searchQuery}
+          placeholder="Search movies..."
+          className="input flex-1 min-w-64"
+        />
+        <button
+          type="submit"
+          className="btn-primary"
+        >
+          Search
+        </button>
+        {searchQuery && (
           <button
-            type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            type="button"
+            onClick={() => setSearchParams({})}
+            className="btn-ghost"
           >
-            Search
+            Clear
           </button>
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchParams({})}
-              className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
-            >
-              Clear
-            </button>
-          )}
-        </div>
+        )}
       </form>
 
       {/* Genre Filter */}
       <div className="mb-8">
-        <h3 className="text-lg font-semibold mb-3">Filter by Genre:</h3>
+        <h3 className="text-sm font-semibold mb-3 text-[var(--color-text-muted)]">Filter by Genre:</h3>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => handleGenreFilter('')}
-            className={`px-4 py-2 rounded-full transition ${
-              !selectedGenre
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+            className={`genre-chip ${!selectedGenre ? 'genre-chip--active' : ''}`}
           >
             All
           </button>
@@ -115,11 +109,7 @@ function Movies() {
             <button
               key={genre.id}
               onClick={() => handleGenreFilter(genre.id)}
-              className={`px-4 py-2 rounded-full transition ${
-                selectedGenre === String(genre.id)
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={`genre-chip ${selectedGenre === String(genre.id) ? 'genre-chip--active' : ''}`}
             >
               {genre.name} ({genre.movies_count})
             </button>
@@ -129,18 +119,18 @@ function Movies() {
 
       {/* Movies Grid */}
       {loading ? (
-        <div className="text-center py-12">Loading...</div>
+        <div className="text-center py-12 text-[var(--color-text-muted)]">Loading...</div>
       ) : movies.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-[var(--color-text-muted)]">
           No movies found. Try a different search or filter.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="movies__grid">
           {movies.map((movie) => (
             <Link
               key={movie.id}
               to={`/movies/${movie.id}`}
-              className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow overflow-hidden"
+              className="movie-card"
             >
               {movie.poster_path ? (
                 <img
@@ -149,13 +139,13 @@ function Movies() {
                   className="w-full h-80 object-cover"
                 />
               ) : (
-                <div className="w-full h-80 bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-400">No Image</span>
+                <div className="w-full h-80 bg-gradient-to-br from-slate-800 to-slate-700 flex items-center justify-center">
+                  <span className="text-[var(--color-text-muted)]">No Image</span>
                 </div>
               )}
               <div className="p-4">
-                <h3 className="font-bold text-sm mb-2 line-clamp-2">{movie.title}</h3>
-                <div className="flex justify-between items-center text-xs text-gray-600">
+                <h3 className="movie-card__title text-[var(--color-text)]">{movie.title}</h3>
+                <div className="movie-card__meta">
                   <span>{movie.release_date?.split('-')[0]}</span>
                   <span className="flex items-center">
                     {parseFloat(movie.vote_average).toFixed(1)}/10

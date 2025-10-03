@@ -4,16 +4,16 @@
 @theme {
   --color-bg-app: #0B1020;
   --color-surface: #0F172A;
-  --color-border: rgba(148,163,184,.25);
+  --color-border: rgba(148,163,184,.3);
 
-  --color-text: #E5E7EB;
-  --color-text-muted: #94A3B8;
+  --color-text: #F1F5F9;         /* slate-100 - Better contrast */
+  --color-text-muted: #CBD5E1;   /* slate-300 - More readable than slate-400 */
 
-  --color-primary: #2563EB;      /* blue-600 */
+  --color-primary: #3B82F6;      /* blue-500 - Brighter for better visibility */
   --color-primary-600: #2563EB;
   --color-primary-700: #1D4ED8;
 
-  --color-secondary: #7C3AED;    /* violet-600 */
+  --color-secondary: #8B5CF6;    /* violet-500 - Brighter */
   --color-accent: #F59E0B;       /* amber-500 */
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
@@ -27,10 +27,17 @@
 html, body, #root {
   height: 100%;
   background: var(--color-bg-app);
+  min-height: 100vh;
 }
 
 body {
   color: var(--color-text);
+}
+
+/* Ensure all page containers have proper background */
+#root > * {
+  min-height: 100vh;
+  background: var(--color-bg-app);
 }
 
 /* ====== UTILIDADES PERSONALIZADAS (Tailwind v4: @utility) ====== */
@@ -72,16 +79,24 @@ body {
 }
 
 @utility input {
-  @apply w-full rounded-[var(--radius-lg)] bg-white/5 text-[var(--color-text)]
-         placeholder:[color:var(--color-text-muted)] border border-[var(--color-border)]
-         focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] px-4 py-2;
+  @apply w-full rounded-[var(--radius-lg)] text-[var(--color-text)]
+         border border-[var(--color-border)]
+         focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] px-4 py-2;
+  background: rgba(255, 255, 255, 0.08);
+  /* Improved placeholder contrast */
+  &::placeholder {
+    color: #94A3B8;
+    opacity: 1;
+  }
 }
 
 @utility heading-hero {
   @apply text-4xl sm:text-5xl font-black tracking-tight;
+  color: var(--color-text);
 }
 
 @utility heading-section {
   @apply text-2xl sm:text-3xl font-bold;
+  color: var(--color-text);
 }
 

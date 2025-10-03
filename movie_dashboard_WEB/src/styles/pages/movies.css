@@ -2,18 +2,58 @@
 
 .movies__title {
   @apply heading-section mb-6;
+  color: var(--color-text);
 }
 .movies__toolbar {
-  @apply mb-6 flex flex-wrap gap-2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 .movies__grid {
-  @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-6;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
+@media (min-width: 640px) {
+  .movies__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 768px) {
+  .movies__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (min-width: 1280px) {
+  .movies__grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Genre Filter Chips */
 .genre-chip {
-  @apply px-4 py-2 rounded-full bg-white/10 text-[var(--color-text)]
-         hover:bg-white/15 transition;
+  padding: 0.625rem 1rem;
+  border-radius: 9999px;
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 2px solid transparent;
+  transition: all 200ms;
+  cursor: pointer;
+}
+.genre-chip:hover {
+  background: rgba(148, 163, 184, 0.25);
+  border-color: rgba(148, 163, 184, 0.3);
 }
 .genre-chip--active {
-  @apply bg-[var(--color-primary)] hover:bg-[var(--color-primary-700)] text-white;
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+.genre-chip--active:hover {
+  background: var(--color-primary-700);
+  border-color: var(--color-primary-700);
 }
 

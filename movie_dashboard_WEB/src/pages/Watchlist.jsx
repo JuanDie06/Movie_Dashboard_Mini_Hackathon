@@ -63,70 +63,54 @@ function Watchlist() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">My Watchlist</h1>
+    <div className="container-app py-8">
+      <h1 className="watchlist__title">My Watchlist</h1>
 
       {/* Stats */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl font-bold text-blue-600">{stats.total}</div>
-            <div className="text-gray-600">Total Movies</div>
+        <div className="stats">
+          <div className="stat-card">
+            <div className="stat-card__value">{stats.total}</div>
+            <div className="text-[var(--color-text-muted)]">Total Movies</div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl font-bold text-green-600">{stats.want_to_watch}</div>
-            <div className="text-gray-600">Want to Watch</div>
+          <div className="stat-card">
+            <div className="stat-card__value">{stats.want_to_watch}</div>
+            <div className="text-[var(--color-text-muted)]">Want to Watch</div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl font-bold text-yellow-600">{stats.watching}</div>
-            <div className="text-gray-600">Watching</div>
+          <div className="stat-card">
+            <div className="stat-card__value">{stats.watching}</div>
+            <div className="text-[var(--color-text-muted)]">Watching</div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl font-bold text-gray-600">{stats.watched}</div>
-            <div className="text-gray-600">Watched</div>
+          <div className="stat-card">
+            <div className="stat-card__value">{stats.watched}</div>
+            <div className="text-[var(--color-text-muted)]">Watched</div>
           </div>
         </div>
       )}
 
       {/* Filter Tabs */}
-      <div className="flex gap-2 mb-6 flex-wrap">
+      <div className="tabs">
         <button
           onClick={() => setActiveFilter('')}
-          className={`px-6 py-2 rounded-lg transition ${
-            activeFilter === ''
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
+          className={`tab ${activeFilter === '' ? 'tab--active' : ''}`}
         >
           All
         </button>
         <button
           onClick={() => setActiveFilter('want_to_watch')}
-          className={`px-6 py-2 rounded-lg transition ${
-            activeFilter === 'want_to_watch'
-              ? 'bg-green-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
+          className={`tab ${activeFilter === 'want_to_watch' ? 'tab--active' : ''}`}
         >
           Want to Watch
         </button>
         <button
           onClick={() => setActiveFilter('watching')}
-          className={`px-6 py-2 rounded-lg transition ${
-            activeFilter === 'watching'
-              ? 'bg-yellow-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
+          className={`tab ${activeFilter === 'watching' ? 'tab--active' : ''}`}
         >
           Watching
         </button>
         <button
           onClick={() => setActiveFilter('watched')}
-          className={`px-6 py-2 rounded-lg transition ${
-            activeFilter === 'watched'
-              ? 'bg-gray-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
+          className={`tab ${activeFilter === 'watched' ? 'tab--active' : ''}`}
         >
           Watched
         </button>
@@ -134,11 +118,11 @@ function Watchlist() {
 
       {/* Watchlist Items */}
       {loading ? (
-        <div className="text-center py-12">Loading...</div>
+        <div className="text-center py-12 text-[var(--color-text-muted)]">Loading...</div>
       ) : watchlists.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-[var(--color-text-muted)]">
           <p className="text-xl mb-4">Your watchlist is empty</p>
-          <Link to="/movies" className="text-blue-600 hover:underline">
+          <Link to="/movies" className="text-[var(--color-primary)] hover:underline">
             Browse movies to add
           </Link>
         </div>
@@ -147,7 +131,7 @@ function Watchlist() {
           {watchlists.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-lg shadow-md p-4 flex gap-4 items-start"
+              className="item"
             >
               <Link to={`/movies/${item.movie.id}`}>
                 {item.movie.poster_path ? (
@@ -157,28 +141,28 @@ function Watchlist() {
                     className="w-24 rounded"
                   />
                 ) : (
-                  <div className="w-24 h-36 bg-gray-200 rounded flex items-center justify-center">
-                    <span className="text-gray-400 text-xs">No Image</span>
+                  <div className="w-24 h-36 bg-gradient-to-br from-slate-800 to-slate-700 rounded flex items-center justify-center">
+                    <span className="text-[var(--color-text-muted)] text-xs">No Image</span>
                   </div>
                 )}
               </Link>
               
               <div className="flex-1">
-                <Link to={`/movies/${item.movie.id}`}>
-                  <h3 className="font-bold text-lg hover:text-blue-600">{item.movie.title}</h3>
+                <Link to={`/movies/${item.movie.id}`} className="item__title">
+                  {item.movie.title}
                 </Link>
-                <div className="text-sm text-gray-600 mb-2">
+                <div className="item__meta">
                   {item.movie.release_date?.split('-')[0]} · {parseFloat(item.movie.vote_average).toFixed(1)}/10
                 </div>
                 <div className="flex gap-2 flex-wrap mb-2">
                   {item.movie.genres?.map((genre) => (
-                    <span key={genre.id} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                    <span key={genre.id} className="item__genre">
                       {genre.name}
                     </span>
                   ))}
                 </div>
                 {item.notes && (
-                  <p className="text-sm text-gray-600 italic">"{item.notes}"</p>
+                  <p className="text-sm text-[var(--color-text-muted)] italic">"{item.notes}"</p>
                 )}
               </div>
 
@@ -186,7 +170,7 @@ function Watchlist() {
                 <select
                   value={item.status}
                   onChange={(e) => handleUpdateStatus(item.id, e.target.value)}
-                  className="px-3 py-2 border rounded text-sm"
+                  className="item__actions"
                 >
                   <option value="want_to_watch">Want to Watch</option>
                   <option value="watching">Watching</option>
@@ -194,7 +178,7 @@ function Watchlist() {
                 </select>
                 <button
                   onClick={() => handleRemove(item.id)}
-                  className="px-3 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition"
+                  className="btn-danger text-sm"
                 >
                   Remove
                 </button>
