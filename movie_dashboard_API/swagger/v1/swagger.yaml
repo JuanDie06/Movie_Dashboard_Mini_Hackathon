@@ -6,6 +6,159 @@ info:
   description: Full-stack movie dashboard application API integrating with TMDB. Provides
     CRUD operations for Movies, Genres, Reviews, and Watchlists.
 paths:
+  "/api/v1/genres":
+    get:
+      summary: List all genres
+      tags:
+      - Genres
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    tmdb_id:
+                      type: integer
+                    name:
+                      type: string
+                    movies_count:
+                      type: integer
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+    post:
+      summary: Create a genre
+      tags:
+      - Genres
+      parameters: []
+      responses:
+        '201':
+          description: genre created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                genre:
+                  type: object
+                  properties:
+                    tmdb_id:
+                      type: integer
+                    name:
+                      type: string
+                  required:
+                  - name
+                  - tmdb_id
+  "/api/v1/genres/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Genre ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show genre details
+      tags:
+      - Genres
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  tmdb_id:
+                    type: integer
+                  name:
+                    type: string
+                  movies_count:
+                    type: integer
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: not found
+    put:
+      summary: Update a genre
+      tags:
+      - Genres
+      parameters: []
+      responses:
+        '200':
+          description: genre updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                genre:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    tmdb_id:
+                      type: integer
+    delete:
+      summary: Delete a genre
+      tags:
+      - Genres
+      responses:
+        '204':
+          description: genre deleted
+  "/api/v1/genres/{id}/movies":
+    parameters:
+    - name: id
+      in: path
+      description: Genre ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get all movies for a genre
+      tags:
+      - Genres
+      description: Returns all movies that belong to a specific genre
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  genre:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                  movies:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Movie"
+        '404':
+          description: genre not found
   "/api/v1/movies":
     get:
       summary: List all movies
@@ -149,6 +302,446 @@ paths:
       responses:
         '204':
           description: movie deleted
+  "/api/v1/reviews":
+    get:
+      summary: List all reviews
+      tags:
+      - Reviews
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Reviews per page
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reviews:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        movie_id:
+                          type: integer
+                        rating:
+                          type: integer
+                          minimum: 1
+                          maximum: 10
+                        content:
+                          type: string
+                        author_name:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                        movie:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            poster_path:
+                              type: string
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+    post:
+      summary: Create a review
+      tags:
+      - Reviews
+      parameters: []
+      responses:
+        '201':
+          description: review created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                review:
+                  type: object
+                  properties:
+                    movie_id:
+                      type: integer
+                    rating:
+                      type: integer
+                      minimum: 1
+                      maximum: 10
+                    content:
+                      type: string
+                      minLength: 10
+                    author_name:
+                      type: string
+                  required:
+                  - movie_id
+                  - rating
+                  - content
+                  - author_name
+  "/api/v1/reviews/highest_rated":
+    get:
+      summary: Get highest rated reviews
+      tags:
+      - Reviews
+      description: Returns reviews with rating 9 or 10, ordered by rating and date
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    movie_id:
+                      type: integer
+                    rating:
+                      type: integer
+                    content:
+                      type: string
+                    author_name:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+                    movie:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        title:
+                          type: string
+  "/api/v1/reviews/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Review ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show review details
+      tags:
+      - Reviews
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  movie_id:
+                    type: integer
+                  rating:
+                    type: integer
+                  content:
+                    type: string
+                  author_name:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: not found
+    put:
+      summary: Update a review
+      tags:
+      - Reviews
+      parameters: []
+      responses:
+        '200':
+          description: review updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                review:
+                  type: object
+                  properties:
+                    rating:
+                      type: integer
+                      minimum: 1
+                      maximum: 10
+                    content:
+                      type: string
+    delete:
+      summary: Delete a review
+      tags:
+      - Reviews
+      responses:
+        '204':
+          description: review deleted
+  "/api/v1/movies/{movie_id}/reviews":
+    parameters:
+    - name: movie_id
+      in: path
+      description: Movie ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get all reviews for a movie
+      tags:
+      - Reviews
+      description: Returns all reviews for a specific movie
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    rating:
+                      type: integer
+                    content:
+                      type: string
+                    author_name:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+        '404':
+          description: movie not found
+  "/api/v1/watchlists":
+    get:
+      summary: List all watchlist items
+      tags:
+      - Watchlists
+      parameters:
+      - name: status
+        in: query
+        type: string
+        description: Filter by status
+        required: false
+        schema:
+          type: string
+          enum:
+          - want_to_watch
+          - watching
+          - watched
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  watchlists:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        movie_id:
+                          type: integer
+                        status:
+                          type: string
+                          enum:
+                          - want_to_watch
+                          - watching
+                          - watched
+                        notes:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                        movie:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            poster_path:
+                              type: string
+                            vote_average:
+                              type: number
+                            release_date:
+                              type: string
+                              format: date
+                            genres:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                  name:
+                                    type: string
+    post:
+      summary: Add movie to watchlist
+      tags:
+      - Watchlists
+      parameters: []
+      responses:
+        '201':
+          description: watchlist item created
+        '422':
+          description: invalid request or duplicate entry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                watchlist:
+                  type: object
+                  properties:
+                    movie_id:
+                      type: integer
+                    status:
+                      type: string
+                      enum:
+                      - want_to_watch
+                      - watching
+                      - watched
+                    notes:
+                      type: string
+                  required:
+                  - movie_id
+                  - status
+  "/api/v1/watchlists/stats":
+    get:
+      summary: Get watchlist statistics
+      tags:
+      - Watchlists
+      description: Returns counts for each watchlist status
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Total watchlist items
+                  want_to_watch:
+                    type: integer
+                    description: Items with want_to_watch status
+                  watching:
+                    type: integer
+                    description: Items with watching status
+                  watched:
+                    type: integer
+                    description: Items with watched status
+  "/api/v1/watchlists/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Watchlist item ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show watchlist item details
+      tags:
+      - Watchlists
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  movie_id:
+                    type: integer
+                  status:
+                    type: string
+                  notes:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: not found
+    put:
+      summary: Update watchlist item
+      tags:
+      - Watchlists
+      description: Update status or notes of a watchlist item
+      parameters: []
+      responses:
+        '200':
+          description: watchlist item updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                watchlist:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                      - want_to_watch
+                      - watching
+                      - watched
+                    notes:
+                      type: string
+    delete:
+      summary: Remove from watchlist
+      tags:
+      - Watchlists
+      responses:
+        '204':
+          description: watchlist item deleted
 servers:
 - url: http://localhost:3000
   description: Development server
