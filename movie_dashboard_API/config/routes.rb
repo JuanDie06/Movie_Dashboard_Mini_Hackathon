@@ -39,6 +39,16 @@ Rails.application.routes.draw do
           get :stats
         end
       end
+
+      # Actors routes
+      resources :actors do
+        collection do
+          get :popular
+        end
+        member do
+          get :movies
+        end
+      end
     end
   end
 

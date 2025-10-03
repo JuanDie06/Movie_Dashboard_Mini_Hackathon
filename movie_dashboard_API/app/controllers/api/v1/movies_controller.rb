@@ -37,7 +37,16 @@ class Api::V1::MoviesController < ApplicationController
       include: {
         genres: { only: [ :id, :name ] },
         reviews: { only: [ :id, :rating, :content, :author_name, :created_at ] },
-        watchlists: { only: [ :id, :status, :notes ] }
+        watchlists: { only: [ :id, :status, :notes ] },
+        movie_actors: {
+          include: {
+            actor: {
+              only: [ :id, :name, :profile_path ],
+              methods: [ :thumbnail_url ]
+            }
+          },
+          only: [ :character_name, :cast_order ]
+        }
       }
     )
   end

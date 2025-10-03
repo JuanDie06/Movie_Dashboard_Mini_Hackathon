@@ -4,8 +4,261 @@ info:
   title: Movie Dashboard API
   version: v1
   description: Full-stack movie dashboard application API integrating with TMDB. Provides
-    CRUD operations for Movies, Genres, Reviews, and Watchlists.
+    CRUD operations for Movies, Genres, Reviews, Watchlists, and Actors.
 paths:
+  "/api/v1/actors":
+    get:
+      summary: List all actors
+      tags:
+      - Actors
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Actors per page
+        required: false
+        schema:
+          type: integer
+      - name: search
+        in: query
+        description: Search by actor name
+        required: false
+        schema:
+          type: string
+      - name: sort_by
+        in: query
+        description: "Sort by: popularity or name:\n * `popularity` \n * `name` \n "
+        required: false
+        enum:
+        - popularity
+        - name
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actors:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Actor"
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+    post:
+      summary: Create an actor
+      tags:
+      - Actors
+      parameters: []
+      responses:
+        '201':
+          description: actor created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actor:
+                  type: object
+                  properties:
+                    tmdb_id:
+                      type: integer
+                    name:
+                      type: string
+                    profile_path:
+                      type: string
+                    biography:
+                      type: string
+                    birthday:
+                      type: string
+                      format: date
+                    deathday:
+                      type: string
+                      format: date
+                    place_of_birth:
+                      type: string
+                    known_for_department:
+                      type: string
+                    popularity:
+                      type: number
+                      format: float
+                  required:
+                  - tmdb_id
+                  - name
+              required:
+              - actor
+  "/api/v1/actors/popular":
+    get:
+      summary: List popular actors
+      tags:
+      - Actors
+      parameters:
+      - name: per_page
+        in: query
+        description: Number of actors to return
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actors:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Actor"
+  "/api/v1/actors/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Actor ID
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Retrieve an actor
+      tags:
+      - Actors
+      responses:
+        '200':
+          description: actor found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Actor"
+        '404':
+          description: actor not found
+    put:
+      summary: Update an actor
+      tags:
+      - Actors
+      parameters: []
+      responses:
+        '200':
+          description: actor updated
+        '404':
+          description: actor not found
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actor:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    profile_path:
+                      type: string
+                    biography:
+                      type: string
+                    birthday:
+                      type: string
+                      format: date
+                    deathday:
+                      type: string
+                      format: date
+                    place_of_birth:
+                      type: string
+                    known_for_department:
+                      type: string
+                    popularity:
+                      type: number
+                      format: float
+              required:
+              - actor
+    delete:
+      summary: Delete an actor
+      tags:
+      - Actors
+      responses:
+        '204':
+          description: actor deleted
+        '404':
+          description: actor not found
+  "/api/v1/actors/{id}/movies":
+    parameters:
+    - name: id
+      in: path
+      description: Actor ID
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Retrieve an actor's movies
+      tags:
+      - Actors
+      description: Get all movies featuring the specified actor, including their character
+        names and cast order
+      responses:
+        '200':
+          description: movies found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    poster_path:
+                      type: string
+                    backdrop_path:
+                      type: string
+                    release_date:
+                      type: string
+                      format: date
+                    vote_average:
+                      type: number
+                      format: float
+                    genres:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          name:
+                            type: string
+                    movie_actors:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          character_name:
+                            type: string
+                          cast_order:
+                            type: integer
+        '404':
+          description: actor not found
   "/api/v1/genres":
     get:
       summary: List all genres
@@ -787,4 +1040,51 @@ components:
           format: date-time
       required:
       - title
+      - tmdb_id
+    Actor:
+      type: object
+      properties:
+        id:
+          type: integer
+        tmdb_id:
+          type: integer
+        name:
+          type: string
+        profile_path:
+          type: string
+        biography:
+          type: string
+        birthday:
+          type: string
+          format: date
+        deathday:
+          type: string
+          format: date
+        place_of_birth:
+          type: string
+        known_for_department:
+          type: string
+        popularity:
+          type: number
+          format: float
+        thumbnail_url:
+          type: string
+          description: Computed thumbnail URL from profile_path
+        profile_url:
+          type: string
+          description: Computed full profile URL from profile_path
+        age:
+          type: integer
+          description: Calculated age or age at death
+        alive:
+          type: boolean
+          description: Whether the actor is alive
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - name
       - tmdb_id

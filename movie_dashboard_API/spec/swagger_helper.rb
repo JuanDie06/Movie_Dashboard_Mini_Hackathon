@@ -20,7 +20,7 @@ RSpec.configure do |config|
       info: {
         title: 'Movie Dashboard API',
         version: 'v1',
-        description: 'Full-stack movie dashboard application API integrating with TMDB. Provides CRUD operations for Movies, Genres, Reviews, and Watchlists.'
+        description: 'Full-stack movie dashboard application API integrating with TMDB. Provides CRUD operations for Movies, Genres, Reviews, Watchlists, and Actors.'
       },
       paths: {},
       servers: [
@@ -58,6 +58,28 @@ RSpec.configure do |config|
               updated_at: { type: 'string', format: 'date-time' }
             },
             required: ['title', 'tmdb_id']
+          },
+          Actor: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              tmdb_id: { type: 'integer' },
+              name: { type: 'string' },
+              profile_path: { type: 'string' },
+              biography: { type: 'string' },
+              birthday: { type: 'string', format: 'date' },
+              deathday: { type: 'string', format: 'date' },
+              place_of_birth: { type: 'string' },
+              known_for_department: { type: 'string' },
+              popularity: { type: 'number', format: 'float' },
+              thumbnail_url: { type: 'string', description: 'Computed thumbnail URL from profile_path' },
+              profile_url: { type: 'string', description: 'Computed full profile URL from profile_path' },
+              age: { type: 'integer', description: 'Calculated age or age at death' },
+              alive: { type: 'boolean', description: 'Whether the actor is alive' },
+              created_at: { type: 'string', format: 'date-time' },
+              updated_at: { type: 'string', format: 'date-time' }
+            },
+            required: ['name', 'tmdb_id']
           }
         }
       }

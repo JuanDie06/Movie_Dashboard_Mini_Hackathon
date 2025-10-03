@@ -10,9 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_02_164929) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_03_133255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "actors", force: :cascade do |t|
+    t.integer "tmdb_id"
+    t.string "name"
+    t.string "profile_path"
+    t.text "biography"
+    t.date "birthday"
+    t.date "deathday"
+    t.string "place_of_birth"
+    t.string "known_for_department"
+    t.decimal "popularity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tmdb_id"], name: "index_actors_on_tmdb_id", unique: true
+  end
 
   create_table "genres", force: :cascade do |t|
     t.integer "tmdb_id"
@@ -20,6 +35,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_164929) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tmdb_id"], name: "index_genres_on_tmdb_id", unique: true
+  end
+
+  create_table "movie_actors", force: :cascade do |t|
+    t.bigint "movie_id", null: false
+    t.bigint "actor_id", null: false
+    t.string "character_name"
+    t.integer "cast_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_movie_actors_on_actor_id"
+    t.index ["cast_order"], name: "index_movie_actors_on_cast_order"
+    t.index ["movie_id", "actor_id"], name: "index_movie_actors_on_movie_id_and_actor_id", unique: true
+    t.index ["movie_id"], name: "index_movie_actors_on_movie_id"
   end
 
   create_table "movie_genres", force: :cascade do |t|
@@ -66,6 +94,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_164929) do
     t.index ["movie_id"], name: "index_watchlists_on_movie_id"
   end
 
+  add_foreign_key "movie_actors", "actors"
+  add_foreign_key "movie_actors", "movies"
   add_foreign_key "movie_genres", "genres"
   add_foreign_key "movie_genres", "movies"
   add_foreign_key "reviews", "movies"
