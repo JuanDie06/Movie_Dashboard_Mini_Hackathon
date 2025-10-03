@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { moviesAPI, genresAPI } from '../services/api';
 
 function Movies() {
@@ -65,9 +66,37 @@ function Movies() {
     }
   };
 
+  // Calculate rating distribution
+  const getRatingDistribution = () => {
+    const distribution = {};
+    for (let i = 0; i <= 10; i++) {
+      distribution[i] = 0;
+    }
+    
+    movies.forEach(movie => {
+      const rating = Math.floor(movie.vote_average);
+      if (rating >= 0 && rating <= 10) {
+        distribution[rating]++;
+      }
+    });
+    
+    return Object.keys(distribution).map(key => ({
+      rating: `${key}.0`,
+      count: distribution[key]
+    })).filter(item => item.count > 0);
+  };
+
   return (
     <div className="container-app py-8">
       <h1 className="movies__title">Browse Movies</h1>
+
+      {/* Rating Distribution Chart */}
+      {!searchQuery && !selectedGenre && movies.length > 0 && (
+        <div className="card p-6 mb-8">
+          <h2 className="heading-section mb-4">Rating Distribution</h2>
+          <RatingDistributionChart data={getRatingDistribution()} />
+        </div>
+      )}
       
       {/* Search Bar */}
       <form onSubmit={handleSearch} className="movies__toolbar">
@@ -156,6 +185,43 @@ function Movies() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+// Rating Distribution Chart Component
+function RatingDistributionChart({ data }) {
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] px-3 py-2 rounded-lg shadow-lg">
+          <p className="text-[var(--color-text)] font-semibold">Rating: {payload[0].payload.rating}</p>
+          <p className="text-[var(--color-text)]">{payload[0].value} movies</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className="text-[var(--color-text-muted)] text-sm mb-4">
+      <p>Distribution of movie ratings across the database</p>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.1)" />
+          <XAxis 
+            dataKey="rating" 
+            tick={{ fill: 'var(--color-text)', fontSize: 12 }}
+            label={{ value: 'Rating (0-10)', position: 'insideBottom', offset: -10, fill: 'var(--color-text)' }}
+          />
+          <YAxis 
+            tick={{ fill: 'var(--color-text)', fontSize: 12 }}
+            label={{ value: 'Number of Movies', angle: -90, position: 'insideLeft', fill: 'var(--color-text)' }}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar dataKey="count" fill="#10B981" radius={[8, 8, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 }

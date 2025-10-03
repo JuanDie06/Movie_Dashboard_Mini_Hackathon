@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Star, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { watchlistsAPI } from '../services/api';
 
 function Watchlist() {
@@ -69,24 +70,34 @@ function Watchlist() {
 
       {/* Stats */}
       {stats && (
-        <div className="stats">
-          <div className="stat-card">
-            <div className="stat-card__value">{stats.total}</div>
-            <div className="text-[var(--color-text-muted)]">Total Movies</div>
+        <>
+          <div className="stats">
+            <div className="stat-card">
+              <div className="stat-card__value">{stats.total}</div>
+              <div className="text-[var(--color-text-muted)]">Total Movies</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-card__value">{stats.want_to_watch}</div>
+              <div className="text-[var(--color-text-muted)]">Want to Watch</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-card__value">{stats.watching}</div>
+              <div className="text-[var(--color-text-muted)]">Watching</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-card__value">{stats.watched}</div>
+              <div className="text-[var(--color-text-muted)]">Watched</div>
+            </div>
           </div>
-          <div className="stat-card">
-            <div className="stat-card__value">{stats.want_to_watch}</div>
-            <div className="text-[var(--color-text-muted)]">Want to Watch</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-card__value">{stats.watching}</div>
-            <div className="text-[var(--color-text-muted)]">Watching</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-card__value">{stats.watched}</div>
-            <div className="text-[var(--color-text-muted)]">Watched</div>
-          </div>
-        </div>
+
+          {/* Watchlist Distribution Chart */}
+          {stats.total > 0 && (
+            <div className="card p-6 mb-8">
+              <h2 className="heading-section mb-4">Watchlist Distribution</h2>
+              <WatchlistChart stats={stats} />
+            </div>
+          )}
+        </>
       )}
 
       {/* Filter Tabs */}
@@ -256,6 +267,64 @@ function WatchlistCarousel({ watchlists, onUpdateStatus, onRemove }) {
         </>
       )}
     </div>
+  );
+}
+
+// Watchlist Distribution Chart Component
+function WatchlistChart({ stats }) {
+  const chartData = [
+    { name: 'Want to Watch', value: stats.want_to_watch, color: '#F59E0B' }, // amber-500
+    { name: 'Watching', value: stats.watching, color: '#2563EB' }, // blue-600
+    { name: 'Watched', value: stats.watched, color: '#10B981' }, // green-500
+  ].filter(item => item.value > 0); // Only show categories with data
+
+  const COLORS = chartData.map(item => item.color);
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0];
+      const percentage = ((data.value / stats.total) * 100).toFixed(1);
+      return (
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] px-3 py-2 rounded-lg shadow-lg">
+          <p className="text-[var(--color-text)] font-semibold">{data.name}</p>
+          <p className="text-[var(--color-text)]">{data.value} movies ({percentage}%)</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const renderCustomLabel = (entry) => {
+    const percentage = ((entry.value / stats.total) * 100).toFixed(0);
+    return `${percentage}%`;
+  };
+
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <PieChart>
+        <Pie
+          data={chartData}
+          cx="50%"
+          cy="50%"
+          labelLine={false}
+          label={renderCustomLabel}
+          outerRadius={120}
+          fill="#8884d8"
+          dataKey="value"
+        >
+          {chartData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip content={<CustomTooltip />} />
+        <Legend 
+          verticalAlign="bottom" 
+          height={36}
+          iconType="circle"
+          wrapperStyle={{ color: 'var(--color-text)' }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
   );
 }
 
