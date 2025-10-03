@@ -32,6 +32,7 @@
 - ✅ Carousels, search, filters
 - ✅ Toast notifications, loading states
 - ✅ Accessibility (WCAG contrast)
+- ✅ Data visualization with 3 interactive charts (Recharts)
 
 ## 🚀 Quick Start
 
@@ -179,6 +180,7 @@ DELETE /api/v1/actors/:id       # Delete actor
 | 5+ Entities | ✅ | 9 entities (7 core + 2 join) |
 | External API | ⚠️ | TMDB full, Huddle partial |
 | Swagger Docs (stretch) | ✅ | 47 documented endpoints |
+| Data Viz (stretch) | ✅ | 3 charts (Pie, Bar, Histogram) |
 
 **Overall Score: 94.4% (A-)**
 
@@ -241,18 +243,19 @@ docker-compose logs      # View logs
 - **Loading States**: User feedback
 - **Toast Notifications**: Success/error messages
 - **Empty States**: Helpful guidance
+- **Interactive Charts**: Pie chart, bar charts with tooltips
 
 ## 📈 Future Improvements
 
 **High Priority**
 1. Fix Huddle API authentication
-2. Add data visualization (charts)
-3. Implement user authentication
+2. Implement user authentication
+3. Performance optimizations (N+1 queries)
 
 **Medium Priority**
-4. Advanced search filters
+4. Advanced search filters  
 5. Movie recommendations
-6. Performance optimizations
+6. Time-series trending charts
 
 **See full improvement list**: [HACKATHON-REVIEW.md](documentation/HACKATHON-REVIEW.md#-possible-improvements)
 
@@ -260,7 +263,7 @@ docker-compose logs      # View logs
 
 1. **Huddle API** - 401 authentication errors (infrastructure ready)
 2. **No Auth** - All data is public (database prepared)
-3. **No Charts** - Stats shown as numbers only
+3. **N+1 Queries** - Some genre queries could be optimized
 
 ## 📝 License
 
