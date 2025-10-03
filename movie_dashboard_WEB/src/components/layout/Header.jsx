@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Film, Home, Grid3x3, Bookmark, Search } from 'lucide-react';
+import { Film, Home, Grid3x3, Bookmark, Calendar, Search } from 'lucide-react';
 
 function Header() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,6 +48,13 @@ function Header() {
               <Bookmark size={18} />
               <span>Watchlist</span>
             </NavLink>
+            <NavLink 
+              to="/sites" 
+              className={({isActive}) => `hdr__link ${isActive ? 'hdr__link--active' : ''}`}
+            >
+              <Calendar size={18} />
+              <span>Sites</span>
+            </NavLink>
           </nav>
 
           {/* Desktop Search */}
@@ -89,6 +96,13 @@ function Header() {
           >
             <Bookmark size={20} />
             <span>Watchlist</span>
+          </NavLink>
+          <NavLink 
+            to="/sites" 
+            className={({isActive}) => `hdr__link--mobile ${isActive ? 'hdr__link--mobileActive' : ''}`}
+          >
+            <Calendar size={20} />
+            <span>Sites</span>
           </NavLink>
         </nav>
       </div>
